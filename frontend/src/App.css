@@ -1,0 +1,127 @@
+/* =========================================================================
+   VIGILQUAD CORE STYLING MATRIX
+   ========================================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: #020617;
+  color: #f1f5f9;
+  min-height: 100vh;
+}
+
+/* 1. AUTH & DASHBOARD VIEWPORTS */
+.auth-viewport-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+}
+
+.auth-interactive-card {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 24px;
+  z-index: 10;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  padding: 3rem;
+}
+
+/* 2. NOTIFICATION BANNERS */
+.banner {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 15px 30px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translate(-50%, -20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.success {
+  background-color: #064e3b;
+  color: #34d399;
+  border: 1px solid #10b981;
+}
+
+.warning {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+  border: 1px solid #ef4444;
+}
+
+/* 3. FORM ELEMENTS */
+input {
+  width: 100%;
+  background: rgba(2, 6, 23, 0.6) !important;
+  border: 1px solid #334155;
+  padding: 1rem;
+  border-radius: 12px;
+  color: white;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+input:focus {
+  outline: none;
+  border: 1px solid #10b981;
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-weight: bold;
+}
+
+button:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+}
+
+/* 4. UTILITIES */
+.matrix-code-rain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* Add this to App.css */
+.banner {
+  position: fixed !important;
+  top: 50px !important; /* Move it down slightly */
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 999999 !important; /* Force to absolute top layer */
+  pointer-events: none !important; /* Ensures it doesn't block clicks */
+  background-color: #7f1d1d !important;
+  color: #fca5a5 !important;
+  border: 2px solid #ef4444 !important;
+  padding: 20px 40px !important;
+  border-radius: 12px !important;
+  font-size: 1.2rem !important;
+  font-weight: bold !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}

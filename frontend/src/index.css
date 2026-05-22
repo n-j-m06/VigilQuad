@@ -1,0 +1,165 @@
+:root {
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #020617;
+  color: #f8fafc;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden; /* Keeps the main dashboard window locked */
+  user-select: none; /* Prevents text selection copy-pasting during exam */
+}
+
+/* 🌀 COMPACT RECTANGULAR MATRIX ANIMATION WRAPPER */
+.auth-viewport-wrapper {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #020617;
+  overflow: hidden;
+}
+
+/* Real-time background drawing layer */
+.matrix-live-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0.35; /* Keeps matrix rain subtle so it never blocks form readability */
+}
+
+/* 🛡️ BIOMETRIC TECH HUD GLASS TARGET PANEL */
+.auth-interactive-card {
+  position: relative;
+  z-index: 10;
+  background: rgba(9, 13, 22, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.15);
+  border-radius: 12px;
+}
+
+/* Live glowing corner targeting accents */
+.auth-interactive-card::before,
+.auth-interactive-card::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: #10b981;
+  border-style: solid;
+  pointer-events: none;
+}
+
+/* Top Left corner crosshair */
+.auth-interactive-card::before {
+  top: -2px;
+  left: -2px;
+  border-width: 3px 0 0 3px;
+  animation: bracketGlow 4s infinite alternate;
+}
+
+/* Bottom Right corner crosshair */
+.auth-interactive-card::after {
+  bottom: -2px;
+  right: -2px;
+  border-width: 0 3px 3px 0;
+  animation: bracketGlow 4s infinite alternate;
+}
+
+@keyframes bracketGlow {
+  0% { opacity: 0.4; filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0)); }
+  100% { opacity: 1; filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.8)); }
+}
+
+/* 4-Quadrant Monolithic Matrix Grid */
+.quadrant-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  background-color: #0f172a;
+  gap: 2px; 
+}
+
+/* Each cell occupies exactly 25% space */
+.quadrant-card {
+  background-color: #020617;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid #1e293b;
+  overflow-y: auto;
+  height: auto;
+  box-sizing: border-box;
+}
+
+.scroll-content-wrapper {
+  padding-bottom: 4rem; 
+}
+
+.quadrant-card::-webkit-scrollbar {
+  width: 6px;
+}
+.quadrant-card::-webkit-scrollbar-track {
+  background: #020617;
+}
+.quadrant-card::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+.quadrant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.btn-option {
+  width: 100%;
+  text-align: left;
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-option:hover {
+  background: #1e293b;
+  border-color: #64748b;
+}
+
+.master-hud {
+  position: fixed;
+  bottom: 0.75rem; 
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(10px);
+  border: 1px solid #334155;
+  padding: 0.25rem 1.25rem; 
+  border-radius: 9999px;
+  display: flex;
+  gap: 1.5rem; 
+  align-items: center;
+  box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.8);
+  z-index: 40;
+}
