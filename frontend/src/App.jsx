@@ -1,15 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ExamProvider, useExam } from './context/ExamContext';
-import { LiveProctor } from './components/LiveProctor';
+import LiveProctor from './components/LiveProctor';
 import { QuadrantPanel } from './components/QuadrantPanel';
 import { MatrixBackground } from './components/MatrixBackground';
+import DemoCalibration from './components/DemoCalibration';
 import { Camera, ShieldCheck, UserCheck, Award } from 'lucide-react';
 
 function ControlHub() {
   const { 
-    examStarted, setExamStarted, token, loginUser, examEnded, scoreMetrics,
-    setReferenceFace, isFaceVerified, setIsFaceVerified, triggerWarning, warnings 
-  } = useExam();
+    examStarted,
+    setExamStarted,
+    token,
+    loginUser,
+    examEnded,
+    scoreMetrics,
+    setReferenceFace,
+    isFaceVerified,
+    setIsFaceVerified,
+    triggerWarning,
+    warnings,
+
+    // NEW
+    demoCompleted
+
+} = useExam();
 
   const [isLoginView, setIsLoginView] = useState(true);
   const [userForm, setUserForm] = useState({ username: '', password: '' });
@@ -112,7 +126,9 @@ function ControlHub() {
             </button>
           </div>
         </div>
-      ) : !examStarted && !examEnded ? (
+      ) : !demoCompleted ? (
+  <DemoCalibration triggerNotify={triggerNotify} />
+) : !examStarted && !examEnded ? (
         <div className="auth-viewport-wrapper">
           <MatrixBackground />
           <div className="auth-interactive-card" style={{ padding: '2rem', textAlign: 'center' }}>

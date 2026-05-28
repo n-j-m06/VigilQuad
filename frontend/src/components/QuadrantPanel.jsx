@@ -112,8 +112,12 @@ const shuffleArray = (array) => {
   return result;
 };
 
-export const QuadrantPanel = () => {
-  const { 
+export const QuadrantPanel = ({
+  demoMode,
+  activeDemoQuadrant,
+  calibrationVideoRef
+}) => {
+const { 
     examStarted, 
     scoreMetrics, 
     globalTimeLeft, 
@@ -121,8 +125,12 @@ export const QuadrantPanel = () => {
     answers, 
     setAnswers, 
     handleFinalSubmission,
-    setExamStarted // Context dispatcher to route back to verification view
-  } = useExam();
+    setExamStarted,
+
+    // NEW
+    setExpectedQuadrant
+
+} = useExam();
   
   // 🔀 True randomized sequence tracking path
   const [sequencePath, setSequencePath] = useState(['physics', 'chemistry', 'biology']);
@@ -177,23 +185,38 @@ export const QuadrantPanel = () => {
   }, [examStarted]);
 
   const activeSubject = sequencePath[currentPathIndex];
+  useEffect(() => {
+
+  if (activeSubject === 'physics') {
+    setExpectedQuadrant('topRight');
+  }
+
+  else if (activeSubject === 'chemistry') {
+    setExpectedQuadrant('bottomRight');
+  }
+
+  else if (activeSubject === 'biology') {
+    setExpectedQuadrant('bottomLeft');
+  }
+
+}, [activeSubject]);
 
   const advanceQuestion = (currentSubject) => {
     if (currentSubject === 'physics') {
       const isCorrect = selectedPhysicsOpt === activePhysicsQ.correct;
-      setAnswers(prev => ({ ...prev, [activePhysicsQ.id]: { optionIndex: selectedPhysicsOpt, isCorrect } }));
+      setAnswers(prev => ({ ...prev, [activePhysicsQ?.id]: { optionIndex: selectedPhysicsOpt, isCorrect } }));
       setActivePhysicsQ(questionBank.physics[Math.floor(Math.random() * 30)]);
       setSelectedPhysicsOpt(null);
     } 
     else if (currentSubject === 'chemistry') {
       const isCorrect = selectedChemOpt === activeChemQ.correct;
-      setAnswers(prev => ({ ...prev, [activeChemQ.id]: { optionIndex: selectedChemOpt, isCorrect } }));
+      setAnswers(prev => ({ ...prev, [activeChemQ?.id]: { optionIndex: selectedChemOpt, isCorrect } }));
       setActiveChemQ(questionBank.chemistry[Math.floor(Math.random() * 30)]);
       setSelectedChemOpt(null);
     } 
     else if (currentSubject === 'biology') {
       const isCorrect = selectedBioOpt === activeBioQ.correct;
-      setAnswers(prev => ({ ...prev, [activeBioQ.id]: { optionIndex: selectedBioOpt, isCorrect } }));
+      setAnswers(prev => ({ ...prev, [activeBioQ?.id]: { optionIndex: selectedBioOpt, isCorrect } }));
       setActiveBioQ(questionBank.biology[Math.floor(Math.random() * 30)]);
       setSelectedBioOpt(null);
     }
@@ -211,7 +234,12 @@ export const QuadrantPanel = () => {
     }
   };
 
-  if (!examStarted || !activePhysicsQ || !activeChemQ || !activeBioQ) return null;
+  if (
+  !demoMode &&
+  (!examStarted || !activePhysicsQ || !activeChemQ || !activeBioQ)
+) {
+  return null;
+}
 
   return (
     <div className="quadrant-container">
@@ -224,27 +252,72 @@ export const QuadrantPanel = () => {
               <Video size={16} /> VIGILQUAD AI LIVE FEED
             </span>
           </div>
-          <div style={{ width: '100%', maxWidth: '340px', height: '210px', margin: '0 auto', background: '#020617', borderRadius: '12px', overflow: 'hidden', border: '1px solid #1e293b', display: 'flex' }}>
+          <div
+  id="live-feed-anchor"
+  style={{
+    width: '100%',
+    maxWidth: '340px',
+    height: '210px',
+    margin: '0 auto',
+    background: '#020617',
+    borderRadius: '12px',
+    overflow: 'hidden',
+    border: '1px solid #1e293b',
+    display: 'flex',
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }}
+>
             {cameraError ? (
               <div style={{ margin: 'auto', color: '#f43f5e', textAlign: 'center' }}><VideoOff /><p style={{ fontSize: '0.75rem' }}>Camera Blocked</p></div>
             ) : (
-              <video 
-                ref={videoRef} autoPlay playsInline muted disablePictureInPicture disableRemotePlayback
-                style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)', pointerEvents: 'none' }} 
-              />
+              <video
+ ref={demoMode ? calibrationVideoRef : videoRef}
+  autoPlay
+  playsInline
+  muted
+  style={{
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    transform: 'scaleX(-1)',
+    borderRadius: '12px'
+  }}
+/>
             )}
           </div>
         </div>
       </div>
 
       {/* 2️⃣ QUADRANT 2: PHYSICS */}
-      <div className="quadrant-card" style={{ opacity: activeSubject === 'physics' ? 1 : 0.25, transition: 'all 0.3s ease' }}>
+      <div
+  className="quadrant-card"
+  style={{
+    opacity:
+      demoMode
+        ? 1
+        : activeSubject === 'physics'
+        ? 1
+        : 0.25,
+
+    transition: 'all 0.3s ease',
+
+    ...(demoMode &&
+    activeDemoQuadrant === 'topRight'
+      ? {
+          border: '3px solid #10b981',
+          boxShadow: '0 0 35px #10b981'
+        }
+      : {})
+  }}
+>
         <div className="scroll-content-wrapper">
           <div className="quadrant-header">
             <span style={{ color: '#f43f5e', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Atom size={16} /> PHYSICS</span>
-            {activeSubject === 'physics' && <span style={{ fontSize: '11px', color: '#f43f5e' }}>Active Query: {activePhysicsQ.id}</span>}
+            {activeSubject === 'physics' && <span style={{ fontSize: '11px', color: '#f43f5e' }}>Active Query: {activePhysicsQ?.id}</span>}
           </div>
-          {activeSubject === 'physics' ? (
+          {!demoMode && activeSubject === 'physics' ? (
             <>
               <p style={{ fontSize: '0.9rem', color: '#f1f5f9', minHeight: '55px', lineHeight: '1.4' }}>{activePhysicsQ.txt}</p>
               {activePhysicsQ.options.map((opt, i) => (
@@ -272,13 +345,33 @@ export const QuadrantPanel = () => {
       </div>
 
       {/* 3️⃣ QUADRANT 3: BIOLOGY */}
-      <div className="quadrant-card" style={{ opacity: activeSubject === 'biology' ? 1 : 0.25, transition: 'all 0.3s ease' }}>
+      <div
+  className="quadrant-card"
+  style={{
+    opacity:
+      demoMode
+        ? 1
+        : activeSubject === 'biology'
+        ? 1
+        : 0.25,
+
+    transition: 'all 0.3s ease',
+
+    ...(demoMode &&
+    activeDemoQuadrant === 'bottomLeft'
+      ? {
+          border: '3px solid #10b981',
+          boxShadow: '0 0 35px #10b981'
+        }
+      : {})
+  }}
+>
         <div className="scroll-content-wrapper">
           <div className="quadrant-header">
             <span style={{ color: '#4ade80', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Dna size={16} /> BIOLOGY</span>
-            {activeSubject === 'biology' && <span style={{ fontSize: '11px', color: '#4ade80' }}>Active Query: {activeBioQ.id}</span>}
+            {activeSubject === 'biology' && <span style={{ fontSize: '11px', color: '#4ade80' }}>Active Query: {activeBioQ?.id}</span>}
           </div>
-          {activeSubject === 'biology' ? (
+          {!demoMode && activeSubject === 'biology' ? (
             <>
               <p style={{ fontSize: '0.9rem', color: '#f1f5f9', minHeight: '55px', lineHeight: '1.4' }}>{activeBioQ.txt}</p>
               {activeBioQ.options.map((opt, i) => (
@@ -306,13 +399,33 @@ export const QuadrantPanel = () => {
       </div>
 
       {/* 4️⃣ QUADRANT 4: CHEMISTRY */}
-      <div className="quadrant-card" style={{ opacity: activeSubject === 'chemistry' ? 1 : 0.25, transition: 'all 0.3s ease' }}>
+      <div
+  className="quadrant-card"
+  style={{
+    opacity:
+      demoMode
+        ? 1
+        : activeSubject === 'chemistry'
+        ? 1
+        : 0.25,
+
+    transition: 'all 0.3s ease',
+
+    ...(demoMode &&
+    activeDemoQuadrant === 'bottomRight'
+      ? {
+          border: '3px solid #10b981',
+          boxShadow: '0 0 35px #10b981'
+        }
+      : {})
+  }}
+>
         <div className="scroll-content-wrapper">
           <div className="quadrant-header">
             <span style={{ color: '#38bdf8', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><FlaskConical size={16} /> CHEMISTRY</span>
-            {activeSubject === 'chemistry' && <span style={{ fontSize: '11px', color: '#38bdf8' }}>Active Query: {activeChemQ.id}</span>}
+            {activeSubject === 'chemistry' && <span style={{ fontSize: '11px', color: '#38bdf8' }}>Active Query: {activeChemQ?.id}</span>}
           </div>
-          {activeSubject === 'chemistry' ? (
+          {!demoMode && activeSubject === 'chemistry' ? (
             <>
               <p style={{ fontSize: '0.9rem', color: '#f1f5f9', minHeight: '55px', lineHeight: '1.4' }}>{activeChemQ.txt}</p>
               {activeChemQ.options.map((opt, i) => (

@@ -7,10 +7,10 @@ export const ExamProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [examStarted, setExamStarted] = useState(false);
   const [examEnded, setExamEnded] = useState(false);
+  const [isFaceVerified, setIsFaceVerified] = useState(false);
   const [globalTimeLeft, setGlobalTimeLeft] = useState(120 * 60);
   
   const [referenceFace, setReferenceFace] = useState(null);
-  const [isFaceVerified, setIsFaceVerified] = useState(false);
 
   const [answers, setAnswers] = useState({});
   // Specific trackers for your 0.25 penalty logic
@@ -20,6 +20,26 @@ export const ExamProvider = ({ children }) => {
     unwantedSound: 0,
     totalCount: 0,
   });
+
+    // =========================
+  // DEMO CALIBRATION STATES
+  // =========================
+
+  const [demoCompleted, setDemoCompleted] = useState(false);
+
+  const [quadrantCalibration, setQuadrantCalibration] = useState({
+    topRight: [],
+    bottomRight: [],
+    bottomLeft: []
+  });
+
+  const [calibrationAverages, setCalibrationAverages] = useState({
+    topRight: null,
+    bottomRight: null,
+    bottomLeft: null
+  });
+
+  const [expectedQuadrant, setExpectedQuadrant] = useState(null);
 
   useEffect(() => {
     let timer;
@@ -110,6 +130,21 @@ export const ExamProvider = ({ children }) => {
     setIsFaceVerified(false);
     setAnswers({});
     setWarnings({ unauthorizedFace: 0, faceUndetected: 0, unwantedSound: 0, totalCount: 0 });
+        setDemoCompleted(false);
+
+    setQuadrantCalibration({
+      topRight: [],
+      bottomRight: [],
+      bottomLeft: []
+    });
+
+    setCalibrationAverages({
+      topRight: null,
+      bottomRight: null,
+      bottomLeft: null
+    });
+
+    setExpectedQuadrant(null);
   };
 
   return (
@@ -123,6 +158,17 @@ export const ExamProvider = ({ children }) => {
         referenceFace, setReferenceFace,
         isFaceVerified, setIsFaceVerified,
         scoreMetrics: calculateLiveScore(),
+                demoCompleted,
+        setDemoCompleted,
+
+        quadrantCalibration,
+        setQuadrantCalibration,
+
+        calibrationAverages,
+        setCalibrationAverages,
+
+        expectedQuadrant,
+        setExpectedQuadrant,
       }}
     >
       {children}
