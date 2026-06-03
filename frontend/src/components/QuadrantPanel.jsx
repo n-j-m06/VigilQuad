@@ -336,10 +336,17 @@ const {
               </button>
             </>
           ) : (
-            <div style={{ padding: '3rem 1rem', textAlign: 'center', color: '#475569', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-              <Lock size={20} />
-              <p style={{ fontSize: '0.8rem', margin: 0, fontStyle: 'italic' }}>Awaiting structural rotation array sync...</p>
-            </div>
+            <div
+  style={{
+    padding: '3rem 1rem',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%'
+  }}
+>
+  <Lock size={20} color="#334155" />
+</div>
           )}
         </div>
       </div>
@@ -390,10 +397,17 @@ const {
               </button>
             </>
           ) : (
-            <div style={{ padding: '3rem 1rem', textAlign: 'center', color: '#475569', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-              <Lock size={20} />
-              <p style={{ fontSize: '0.8rem', margin: 0, fontStyle: 'italic' }}>Awaiting structural rotation array sync...</p>
-            </div>
+            <div
+  style={{
+    padding: '3rem 1rem',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%'
+  }}
+>
+  <Lock size={20} color="#334155" />
+</div>
           )}
         </div>
       </div>
@@ -444,10 +458,17 @@ const {
               </button>
             </>
           ) : (
-            <div style={{ padding: '3rem 1rem', textAlign: 'center', color: '#475569', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-              <Lock size={20} />
-              <p style={{ fontSize: '0.8rem', margin: 0, fontStyle: 'italic' }}>Awaiting structural rotation array sync...</p>
-            </div>
+            <div
+  style={{
+    padding: '3rem 1rem',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%'
+  }}
+>
+  <Lock size={20} color="#334155" />
+</div>
           )}
         </div>
       </div>

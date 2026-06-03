@@ -388,15 +388,7 @@ return (
         </span>
       </p>
 
-      <div
-        style={{
-          color: '#10b981',
-          fontWeight: 'bold',
-          fontSize: '1rem'
-        }}
-      >
-        {timer}s
-      </div>
+      
 
     </div>
 
@@ -411,11 +403,66 @@ return (
     zIndex: 1
   }}
 >
- <QuadrantPanel
-  demoMode={true}
-  activeDemoQuadrant={currentQuadrant.key}
-  calibrationVideoRef={videoRef}
-/>
+<div style={{ position: 'relative', width: '100%', height: '100%' }}>
+
+  <QuadrantPanel
+    demoMode={true}
+    activeDemoQuadrant={currentQuadrant.key}
+    calibrationVideoRef={videoRef}
+  />
+
+  {/* QUADRANT TIMER */}
+  <div
+    style={{
+      position: 'absolute',
+
+      top:
+        currentQuadrant.key === 'topRight'
+          ? '25%'
+          : currentQuadrant.key === 'bottomRight'
+          ? '75%'
+          : '75%',
+
+      left:
+        currentQuadrant.key === 'topRight'
+          ? '75%'
+          : currentQuadrant.key === 'bottomRight'
+          ? '75%'
+          : '25%',
+
+      transform: 'translate(-50%, -50%)',
+
+      zIndex: 99999,
+
+      width: '80px',
+      height: '80px',
+
+      borderRadius: '50%',
+
+      background: 'rgba(16,185,129,0.15)',
+
+      border: '2px solid #10b981',
+
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+
+      color: '#10b981',
+
+      fontSize: '1.8rem',
+      fontWeight: 'bold',
+
+      boxShadow: '0 0 25px rgba(16,185,129,0.6)',
+
+      backdropFilter: 'blur(10px)',
+
+      pointerEvents: 'none'
+    }}
+  >
+    {timer}
+  </div>
+
+</div>
 </div>
 
     {/* ========================= */}
