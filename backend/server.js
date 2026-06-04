@@ -16,7 +16,12 @@ const sequelize = new Sequelize({
 
 const User = sequelize.define('User', {
   username: { type: DataTypes.STRING, allowNull: false, unique: true },
-  password: { type: DataTypes.STRING, allowNull: false }
+  password: { type: DataTypes.STRING, allowNull: false },
+
+  examAttempted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
 });
 
 const ExamSession = sequelize.define('ExamSession', {
@@ -52,13 +57,63 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 app.post('/api/auth/login', async (req, res) => {
-  const user = await User.findOne({ where: { username: req.body.username } });
-  if (user && await bcrypt.compare(req.body.password, user.password)) {
-    const token = jwt.sign({ username: user.username }, JWT_SECRET);
-    res.json({ token, username: user.username });
-  } else { res.status(400).json({ error: 'Invalid credentials.' }); }
-});
 
+  const user = await User.findOne({
+    where: { username: req.body.username }
+  });
+
+  if (
+    !user ||
+    !(await bcrypt.compare(
+      req.body.password,
+      user.password
+    ))
+  ) {
+    return res.status(400).json({
+      error: 'Invalid credentials.'
+    });
+  }
+
+ if (user.examAttempted) {
+  return res.status(403).json({
+    error:
+      'Exam already attempted. Further attempts are not allowed.'
+  });
+}
+
+  const token = jwt.sign(
+    { username: user.username },
+    JWT_SECRET
+  );
+
+  res.json({
+    token,
+    username: user.username
+  });
+
+});
+app.post(
+  '/api/exam/start',
+  authenticateToken,
+  async (req, res) => {
+
+    await User.update(
+      {
+        examAttempted: true
+      },
+      {
+        where: {
+          username: req.user.username
+        }
+      }
+    );
+
+    res.json({
+      message: 'Exam session started.'
+    });
+
+  }
+);
 app.post('/api/exam/submit', authenticateToken, async (req, res) => {
   try {
     await ExamSession.create({ username: req.user.username, ...req.body });

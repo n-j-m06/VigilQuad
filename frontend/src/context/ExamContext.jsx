@@ -3,8 +3,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const ExamContext = createContext();
 
 export const ExamProvider = ({ children }) => {
-  const [username, setUsername] = useState(localStorage.getItem('username') || '');
-  const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const [username, setUsername] = useState('');
+  const [token, setToken] = useState('');
   const [examStarted, setExamStarted] = useState(false);
   const [examEnded, setExamEnded] = useState(false);
   const [isFaceVerified, setIsFaceVerified] = useState(false);
@@ -20,6 +20,10 @@ export const ExamProvider = ({ children }) => {
     unwantedSound: 0,
     totalCount: 0,
   });
+  useEffect(() => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+}, []);
 
     // =========================
   // DEMO CALIBRATION STATES

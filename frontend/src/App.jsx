@@ -19,7 +19,7 @@ function ControlHub() {
     setIsFaceVerified,
     triggerWarning,
     warnings,
-
+    logoutUser,
     // NEW
     demoCompleted
 
@@ -108,6 +108,20 @@ function ControlHub() {
               <button type="submit" style={{ background: '#10b981', padding: '1rem', borderRadius: '12px', border: 'none', fontWeight: 'bold' }}>
                 {isLoginView ? 'INITIATE SESSION' : 'REGISTER VAULT'}
               </button>
+              <p
+  onClick={() => setIsLoginView(!isLoginView)}
+  style={{
+    textAlign: 'center',
+    color: '#94a3b8',
+    marginTop: '1rem',
+    cursor: 'pointer',
+    fontSize: '0.9rem'
+  }}
+>
+  {isLoginView
+    ? 'New user? Register here'
+    : 'Already have an account? Login here'}
+</p>
             </form>
           </div>
         </div>
@@ -133,7 +147,29 @@ function ControlHub() {
           <MatrixBackground />
           <div className="auth-interactive-card" style={{ padding: '2rem', textAlign: 'center' }}>
             <UserCheck style={{ color: '#10b981', width: '4rem', height: '4rem', margin: '0 auto 1rem auto' }} />
-            <button onClick={() => setExamStarted(true)} style={{ background: '#10b981', padding: '1rem', borderRadius: '12px', width: '100%' }}>LAUNCH CORE PROCTOR GRID</button>
+            <button onClick={async () => {
+
+  try {
+
+    await fetch(
+      'http://localhost:5000/api/exam/start',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    setExamStarted(true);
+
+  } catch (err) {
+
+    console.error(err);
+
+  }
+
+}} style={{ background: '#10b981', padding: '1rem', borderRadius: '12px', width: '100%' }}>LAUNCH CORE PROCTOR GRID</button>
           </div>
         </div>
         ) : examEnded ? (
@@ -160,19 +196,33 @@ function ControlHub() {
         />
       </div>
 
-      {/* Score Section */}
-      <div style={{ margin: '1rem 0' }}>
-        <p style={{ color: '#94a3b8', margin: 0, fontSize: '0.8rem' }}>FINAL PERFORMANCE SCORE</p>
-        <h1 style={{ color: '#ffffff', fontSize: '3rem', margin: '0.5rem 0' }}>
-          {scoreMetrics.finalScore.toFixed(2)}
-        </h1>
-      </div>
+      <p
+  style={{
+    color: '#cbd5e1',
+    fontSize: '1rem',
+    marginTop: '1rem',
+    marginBottom: '2rem'
+  }}
+>
+  Your examination session has been successfully submitted.
+  Thank you for using VigilQuad.
+</p>
+     
 
-      <p style={{ color: '#fff', marginBottom: '1.5rem' }}>Total Warnings Recorded: <strong>{warnings.totalCount}</strong></p>
       
-      <button onClick={() => window.location.reload()} style={{ background: '#10b981', padding: '0.8rem 2rem', borderRadius: '12px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
-        RESTART GATE
-      </button>
+     <button
+  onClick={logoutUser}
+  style={{
+    background: '#10b981',
+    padding: '0.8rem 2rem',
+    borderRadius: '12px',
+    border: 'none',
+    cursor: 'pointer',
+    fontWeight: 'bold'
+  }}
+>
+  LOG OUT
+</button>
     </div>
   </div>
 )

@@ -139,7 +139,8 @@ const {
   const [activePhysicsQ, setActivePhysicsQ] = useState(null);
   const [activeChemQ, setActiveChemQ] = useState(null);
   const [activeBioQ, setActiveBioQ] = useState(null);
-
+  const [questionsAttempted, setQuestionsAttempted] = useState(0);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [selectedPhysicsOpt, setSelectedPhysicsOpt] = useState(null);
   const [selectedChemOpt, setSelectedChemOpt] = useState(null);
   const [selectedBioOpt, setSelectedBioOpt] = useState(null);
@@ -221,18 +222,22 @@ const {
       setSelectedBioOpt(null);
     }
 
-    // Cycle through the randomized sequence path array safely
-    setCurrentPathIndex((prevIndex) => (prevIndex + 1) % sequencePath.length);
+    const newCount = questionsAttempted + 1;
+
+setQuestionsAttempted(newCount);
+
+if (newCount >= 90) {
+  setShowSubmitModal(true);
+  return;
+}
+
+setCurrentPathIndex((prevIndex) => (prevIndex + 1) % sequencePath.length);
   };
 
   // Terminate test and redirect back to verification
-  const processFinalSubmission = () => {
-    handleFinalSubmission(); 
-    alert(`Submission Successful!\nYour score: ${scoreMetrics.finalScore.toFixed(1)}`);
-    if (setExamStarted) {
-      setExamStarted(false); // Resets flag, routing back to face identification component
-    }
-  };
+ const processFinalSubmission = () => {
+  handleFinalSubmission();
+};
 
   if (
   !demoMode &&
@@ -243,7 +248,67 @@ const {
 
   return (
     <div className="quadrant-container">
-      
+      {showSubmitModal && (
+  <div
+    style={{
+      position: 'fixed',
+      inset: 0,
+      background: 'rgba(0,0,0,0.75)',
+      zIndex: 999999,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}
+  >
+    <div
+      style={{
+        background: '#0f172a',
+        border: '2px solid #10b981',
+        borderRadius: '20px',
+        padding: '2rem',
+        width: '420px',
+        textAlign: 'center',
+        boxShadow: '0 0 40px rgba(16,185,129,0.35)'
+      }}
+    >
+      <h2
+        style={{
+          color: '#10b981',
+          marginBottom: '1rem'
+        }}
+      >
+        EXAM COMPLETED
+      </h2>
+
+      <p
+        style={{
+          color: '#cbd5e1',
+          marginBottom: '2rem'
+        }}
+      >
+        You have completed all 90 questions.
+        <br />
+        Do you want to submit your exam?
+      </p>
+
+      <button
+        onClick={processFinalSubmission}
+        style={{
+          background: '#10b981',
+          color: '#020617',
+          border: 'none',
+          padding: '0.8rem 2rem',
+          borderRadius: '12px',
+          cursor: 'pointer',
+          fontWeight: 'bold',
+          fontSize: '1rem'
+        }}
+      >
+        SUBMIT EXAM
+      </button>
+    </div>
+  </div>
+)}
       {/* 1️⃣ QUADRANT 1: STERILE CAMERA COMPARTMENT */}
       <div className="quadrant-card" style={{ background: '#090d16', border: '2px solid #ef4444' }}>
         <div className="scroll-content-wrapper" style={{ width: '100%' }}>
@@ -320,6 +385,17 @@ const {
           {!demoMode && activeSubject === 'physics' ? (
             <>
               <p style={{ fontSize: '0.9rem', color: '#f1f5f9', minHeight: '55px', lineHeight: '1.4' }}>{activePhysicsQ.txt}</p>
+              <div
+  style={{
+    textAlign: 'center',
+    marginBottom: '12px',
+    color: '#f59e0b',
+    fontWeight: 'bold',
+    fontSize: '1rem'
+  }}
+>
+  ⏳ {Math.floor(globalTimeLeft / 60)}m {globalTimeLeft % 60}s
+</div>
               {activePhysicsQ.options.map((opt, i) => (
                 <button 
                   key={i} onClick={() => setSelectedPhysicsOpt(i)} className="btn-option" 
@@ -371,6 +447,17 @@ const {
           {!demoMode && activeSubject === 'biology' ? (
             <>
               <p style={{ fontSize: '0.9rem', color: '#f1f5f9', minHeight: '55px', lineHeight: '1.4' }}>{activeBioQ.txt}</p>
+              <div
+  style={{
+    textAlign: 'center',
+    marginBottom: '12px',
+    color: '#f59e0b',
+    fontWeight: 'bold',
+    fontSize: '1rem'
+  }}
+>
+  ⏳ {Math.floor(globalTimeLeft / 60)}m {globalTimeLeft % 60}s
+</div>
               {activeBioQ.options.map((opt, i) => (
                 <button 
                   key={i} onClick={() => setSelectedBioOpt(i)} className="btn-option" 
@@ -422,6 +509,17 @@ const {
           {!demoMode && activeSubject === 'chemistry' ? (
             <>
               <p style={{ fontSize: '0.9rem', color: '#f1f5f9', minHeight: '55px', lineHeight: '1.4' }}>{activeChemQ.txt}</p>
+              <div
+  style={{
+    textAlign: 'center',
+    marginBottom: '12px',
+    color: '#f59e0b',
+    fontWeight: 'bold',
+    fontSize: '1rem'
+  }}
+>
+  ⏳ {Math.floor(globalTimeLeft / 60)}m {globalTimeLeft % 60}s
+</div>
               {activeChemQ.options.map((opt, i) => (
                 <button 
                   key={i} onClick={() => setSelectedChemOpt(i)} className="btn-option" 
@@ -448,118 +546,15 @@ const {
 
 {!demoMode && (
   <div className="master-hud">
-    <div>
-      <span
-        style={{
-          fontSize: '8px',
-          color: '#94a3b8',
-          display: 'block',
-          fontWeight: 'bold',
-          lineHeight: '1'
-        }}
-      >
-        TIME LEFT
-      </span>
+    
+    
+    
+   
 
-      <span
-        style={{
-          fontFamily: 'monospace',
-          color: '#f59e0b',
-          fontSize: '0.95rem',
-          fontWeight: 'bold'
-        }}
-      >
-        {Math.floor(globalTimeLeft / 60)}m {globalTimeLeft % 60}s
-      </span>
-    </div>
+    
+   
 
-    <div
-      style={{
-        width: '1px',
-        height: '14px',
-        backgroundColor: '#334155'
-      }}
-    />
-
-    <div>
-      <span
-        style={{
-          fontSize: '8px',
-          color: '#94a3b8',
-          display: 'block',
-          fontWeight: 'bold',
-          lineHeight: '1'
-        }}
-      >
-        LIVE SCORE
-      </span>
-
-      <span
-        style={{
-          color: '#10b981',
-          fontSize: '0.95rem',
-          fontWeight: 'bold'
-        }}
-      >
-        {scoreMetrics.finalScore.toFixed(1)}
-      </span>
-    </div>
-
-    <div
-      style={{
-        width: '1px',
-        height: '14px',
-        backgroundColor: '#334155'
-      }}
-    />
-
-    <div>
-      <span
-        style={{
-          fontSize: '8px',
-          color: '#94a3b8',
-          display: 'block',
-          fontWeight: 'bold',
-          lineHeight: '1'
-        }}
-      >
-        INFRACTIONS
-      </span>
-
-      <span
-        style={{
-          color: '#ef4444',
-          fontSize: '0.95rem',
-          fontWeight: 'bold'
-        }}
-      >
-        {warnings.totalCount}
-      </span>
-    </div>
-
-    <div
-      style={{
-        width: '1px',
-        height: '14px',
-        backgroundColor: '#334155'
-      }}
-    />
-
-    <button
-      onClick={processFinalSubmission}
-      style={{
-        background: '#10b981',
-        color: '#020617',
-        border: 'none',
-        padding: '0.2rem 0.75rem',
-        fontWeight: 'bold',
-        borderRadius: '12px',
-        cursor: 'pointer',
-        fontSize: '0.75rem'
-      }}
-    >
-      SUBMIT
-    </button>
+    
   </div>
 )}
     </div>
