@@ -329,68 +329,9 @@ return (
     {/* TOP CALIBRATION HUD */}
     {/* ========================= */}
 
-    <div
-      style={{
+   
 
-        position: 'fixed',
-
-        top: '20px',
-        left: '50%',
-
-        transform: 'translateX(-50%)',
-
-        zIndex: 9999,
-
-        background: 'rgba(15, 23, 42, 0.92)',
-
-        border: '1px solid #10b981',
-
-        padding: '14px 28px',
-
-        borderRadius: '16px',
-
-        backdropFilter: 'blur(10px)',
-
-        textAlign: 'center',
-
-        boxShadow: '0 0 25px rgba(16,185,129,0.35)'
-      }}
-    >
-
-      <h2
-        style={{
-          color: '#10b981',
-          margin: 0,
-          fontSize: '1.1rem',
-          fontWeight: 'bold'
-        }}
-      >
-        CALIBRATION SESSION
-      </h2>
-
-      <p
-        style={{
-          color: '#cbd5e1',
-          marginTop: '6px',
-          marginBottom: '6px',
-          fontSize: '0.9rem'
-        }}
-      >
-        Look towards:
-        {' '}
-        <span
-          style={{
-            color: '#f59e0b',
-            fontWeight: 'bold'
-          }}
-        >
-          {currentQuadrant.label}
-        </span>
-      </p>
-
-      
-
-    </div>
+    
 
     {/* ========================= */}
     {/* REAL QUADRANT PANEL */}
@@ -412,65 +353,137 @@ return (
   />
 
   {/* QUADRANT TIMER */}
+  {/* ACTIVE QUADRANT CALIBRATION OVERLAY */}
+
+<div
+  style={{
+    position: 'absolute',
+
+    top:
+      currentQuadrant.key === 'topRight'
+        ? '25%'
+        : currentQuadrant.key === 'bottomRight'
+        ? '75%'
+        : '75%',
+
+    left:
+      currentQuadrant.key === 'topRight'
+        ? '75%'
+        : currentQuadrant.key === 'bottomRight'
+        ? '75%'
+        : '25%',
+
+    transform: 'translate(-50%, -50%)',
+
+    zIndex: 99999,
+
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '14px',
+
+    pointerEvents: 'none'
+  }}
+>
+
   <div
     style={{
-      position: 'absolute',
-
-      top:
-        currentQuadrant.key === 'topRight'
-          ? '25%'
-          : currentQuadrant.key === 'bottomRight'
-          ? '75%'
-          : '75%',
-
-      left:
-        currentQuadrant.key === 'topRight'
-          ? '75%'
-          : currentQuadrant.key === 'bottomRight'
-          ? '75%'
-          : '25%',
-
-      transform: 'translate(-50%, -50%)',
-
-      zIndex: 99999,
-
-      width: '80px',
-      height: '80px',
-
-      borderRadius: '50%',
-
-      background: 'rgba(16,185,129,0.15)',
-
-      border: '2px solid #10b981',
-
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-
-      color: '#10b981',
-
-      fontSize: '1.8rem',
+      color: '#ffffff',
       fontWeight: 'bold',
-
-      boxShadow: '0 0 25px rgba(16,185,129,0.6)',
-
-      backdropFilter: 'blur(10px)',
-
-      pointerEvents: 'none'
+      fontSize: '1rem',
+      letterSpacing: '1px',
+      textAlign: 'center',
+      textShadow: '0 0 12px rgba(255,255,255,0.4)'
     }}
   >
-    {timer}
+    LOOK TOWARDS
+  </div>
+
+  <div
+    style={{
+      color: '#f59e0b',
+      fontWeight: 'bold',
+      fontSize: '1.2rem',
+      textAlign: 'center',
+      maxWidth: '220px',
+      lineHeight: '1.3'
+    }}
+  >
+    {currentQuadrant.label}
+  </div>
+
+  <div
+    style={{
+      position: 'relative',
+      width: '110px',
+      height: '110px'
+    }}
+  >
+
+    <svg
+      width="110"
+      height="110"
+      style={{
+        transform: 'rotate(-90deg)'
+      }}
+    >
+
+      <circle
+        cx="55"
+        cy="55"
+        r="48"
+        stroke="rgba(16,185,129,0.15)"
+        strokeWidth="8"
+        fill="none"
+      />
+
+      <circle
+        cx="55"
+        cy="55"
+        r="48"
+        stroke="#10b981"
+        strokeWidth="8"
+        fill="none"
+        strokeLinecap="round"
+        strokeDasharray={301.6}
+        strokeDashoffset={
+          301.6 *
+          (1 - timer / 15)
+        }
+      />
+
+    </svg>
+
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+
+        color: '#10b981',
+
+        fontSize: '2rem',
+        fontWeight: 'bold'
+      }}
+    >
+      {timer}
+    </div>
+
   </div>
 
 </div>
+
+    {/* ========================= */}
+   {/* CAMERA OVERLAY */}
+
 </div>
 
-    {/* ========================= */}
-    {/* CAMERA OVERLAY */}
-    {/* ========================= */}
+</div>
 
-   
+</div>
 
-  </div>
 );
 }

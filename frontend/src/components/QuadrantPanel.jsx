@@ -336,17 +336,7 @@ const {
               </button>
             </>
           ) : (
-            <div
-  style={{
-    padding: '3rem 1rem',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%'
-  }}
->
-  <Lock size={20} color="#334155" />
-</div>
+            <div />
           )}
         </div>
       </div>
@@ -397,17 +387,7 @@ const {
               </button>
             </>
           ) : (
-            <div
-  style={{
-    padding: '3rem 1rem',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%'
-  }}
->
-  <Lock size={20} color="#334155" />
-</div>
+           <div />
           )}
         </div>
       </div>
@@ -458,48 +438,130 @@ const {
               </button>
             </>
           ) : (
-            <div
-  style={{
-    padding: '3rem 1rem',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%'
-  }}
->
-  <Lock size={20} color="#334155" />
-</div>
+            <div />
           )}
         </div>
       </div>
 
       {/* FLOATING ACTION CONTROL DASH HUD PANEL STRIP */}
-      <div className="master-hud">
-        <div>
-          <span style={{ fontSize: '8px', color: '#94a3b8', display: 'block', fontWeight: 'bold', lineHeight: '1' }}>TIME LEFT</span>
-          <span style={{ fontFamily: 'monospace', color: '#f59e0b', fontSize: '0.95rem', fontWeight: 'bold' }}>
-            {Math.floor(globalTimeLeft / 60)}m {globalTimeLeft % 60}s
-          </span>
-        </div>
-        <div style={{ width: '1px', height: '14px', backgroundColor: '#334155' }}></div>
-        <div>
-          <span style={{ fontSize: '8px', color: '#94a3b8', display: 'block', fontWeight: 'bold', lineHeight: '1' }}>LIVE SCORE</span>
-          <span style={{ color: '#10b981', fontSize: '0.95rem', fontWeight: 'bold' }}>{scoreMetrics.finalScore.toFixed(1)}</span>
-        </div>
-        <div style={{ width: '1px', height: '14px', backgroundColor: '#334155' }}></div>
-        <div>
-          <span style={{ fontSize: '8px', color: '#94a3b8', display: 'block', fontWeight: 'bold', lineHeight: '1' }}>INFRACTIONS</span>
-          <span style={{ color: '#ef4444', fontSize: '0.95rem', fontWeight: 'bold' }}>{warnings.totalCount}</span>
-        </div>
-        <div style={{ width: '1px', height: '14px', backgroundColor: '#334155' }}></div>
-        <button 
-          onClick={processFinalSubmission} 
-          style={{ background: '#10b981', color: '#020617', border: 'none', padding: '0.2rem 0.75rem', fontWeight: 'bold', borderRadius: '12px', cursor: 'pointer', fontSize: '0.75rem' }}
-        >
-          SUBMIT
-        </button>
-      </div>
+      {/* FLOATING ACTION CONTROL DASH HUD PANEL STRIP */}
 
+{!demoMode && (
+  <div className="master-hud">
+    <div>
+      <span
+        style={{
+          fontSize: '8px',
+          color: '#94a3b8',
+          display: 'block',
+          fontWeight: 'bold',
+          lineHeight: '1'
+        }}
+      >
+        TIME LEFT
+      </span>
+
+      <span
+        style={{
+          fontFamily: 'monospace',
+          color: '#f59e0b',
+          fontSize: '0.95rem',
+          fontWeight: 'bold'
+        }}
+      >
+        {Math.floor(globalTimeLeft / 60)}m {globalTimeLeft % 60}s
+      </span>
+    </div>
+
+    <div
+      style={{
+        width: '1px',
+        height: '14px',
+        backgroundColor: '#334155'
+      }}
+    />
+
+    <div>
+      <span
+        style={{
+          fontSize: '8px',
+          color: '#94a3b8',
+          display: 'block',
+          fontWeight: 'bold',
+          lineHeight: '1'
+        }}
+      >
+        LIVE SCORE
+      </span>
+
+      <span
+        style={{
+          color: '#10b981',
+          fontSize: '0.95rem',
+          fontWeight: 'bold'
+        }}
+      >
+        {scoreMetrics.finalScore.toFixed(1)}
+      </span>
+    </div>
+
+    <div
+      style={{
+        width: '1px',
+        height: '14px',
+        backgroundColor: '#334155'
+      }}
+    />
+
+    <div>
+      <span
+        style={{
+          fontSize: '8px',
+          color: '#94a3b8',
+          display: 'block',
+          fontWeight: 'bold',
+          lineHeight: '1'
+        }}
+      >
+        INFRACTIONS
+      </span>
+
+      <span
+        style={{
+          color: '#ef4444',
+          fontSize: '0.95rem',
+          fontWeight: 'bold'
+        }}
+      >
+        {warnings.totalCount}
+      </span>
+    </div>
+
+    <div
+      style={{
+        width: '1px',
+        height: '14px',
+        backgroundColor: '#334155'
+      }}
+    />
+
+    <button
+      onClick={processFinalSubmission}
+      style={{
+        background: '#10b981',
+        color: '#020617',
+        border: 'none',
+        padding: '0.2rem 0.75rem',
+        fontWeight: 'bold',
+        borderRadius: '12px',
+        cursor: 'pointer',
+        fontSize: '0.75rem'
+      }}
+    >
+      SUBMIT
+    </button>
+  </div>
+)}
     </div>
   );
 };
