@@ -1,41 +1,61 @@
 # 🛡️ VigilQuad Backend
 
 <p align="center">
-  <strong>The intelligent backend powering VigilQuad's real-time surveillance and monitoring ecosystem.</strong>
+  <strong>The intelligent backend powering VigilQuad's real-time surveillance, examination management, authentication, and analytics ecosystem.</strong>
 </p>
 
 ---
 
 ## 📖 Overview
 
-The VigilQuad Backend serves as the core engine of the VigilQuad platform, handling data processing, API communication, monitoring workflows, and system intelligence. Built using Node.js and Express, it provides a scalable and efficient foundation for managing surveillance operations, processing detection events, and supporting real-time interactions between frontend services and AI-powered modules.
+The VigilQuad Backend serves as the core engine of the VigilQuad platform, handling authentication, examination workflows, calibration recording storage, telemetry processing, analytics generation, and system intelligence.
 
-The backend is designed to ensure reliability, performance, and seamless integration with future security and monitoring enhancements.
+Built using Node.js and Express, it provides a scalable and efficient foundation for managing candidate sessions, processing examination submissions, storing monitoring data, and supporting secure communication between frontend services and AI-powered monitoring modules.
+
+The backend is designed to ensure reliability, performance, persistent storage, and seamless integration with future proctoring and monitoring enhancements.
 
 ---
 
 ## ✨ Features
 
-- 🚀 High-performance REST API architecture
-- 🔄 Real-time monitoring and event handling
-- 🛡️ Surveillance and proctoring support services
-- 📊 Efficient data management using SQLite
-- ⚡ Lightweight and scalable Express.js framework
-- 🔗 Seamless integration with frontend dashboards
-- 📂 Organized and maintainable project structure
-- 🤖 Ready for AI and computer vision integrations
+* 🚀 High-performance REST API architecture
+* 🔄 Real-time monitoring and event handling
+* 🛡️ Surveillance and proctoring support services
+* 📊 Efficient data management using SQLite
+* ⚡ Lightweight and scalable Express.js framework
+* 🔗 Seamless integration with frontend dashboards
+* 📂 Organized and maintainable project structure
+* 🤖 Ready for AI and computer vision integrations
+
+### Examination & Authentication Features
+
+* 🔐 JWT-Based Authentication System
+* 👤 Candidate Registration & Login APIs
+* 🎭 Face Verification Support
+* 🎯 Quadrant Calibration Data Processing
+* 🎥 Calibration Recording Storage
+* 📝 Examination Submission APIs
+* 📊 Candidate Analytics Generation
+* 🚨 Warning Aggregation & Tracking
+* 🔒 One-Attempt Examination Enforcement
+* 📂 Persistent Examination Telemetry Storage
+* 📡 Administrative Results Retrieval APIs
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose |
-|------------|----------|
-| Node.js | JavaScript Runtime Environment |
-| Express.js | Backend Web Framework |
-| SQLite | Lightweight Database |
-| JavaScript | Server-side Logic |
-| REST APIs | Communication Layer |
+| Technology | Purpose                        |
+| ---------- | ------------------------------ |
+| Node.js    | JavaScript Runtime Environment |
+| Express.js | Backend Web Framework          |
+| SQLite     | Lightweight Database           |
+| Sequelize  | Database ORM                   |
+| JWT        | Authentication & Authorization |
+| bcryptjs   | Password Hashing               |
+| Multer     | Calibration Recording Uploads  |
+| JavaScript | Server-side Logic              |
+| REST APIs  | Communication Layer            |
 
 ---
 
@@ -43,6 +63,9 @@ The backend is designed to ensure reliability, performance, and seamless integra
 
 ```text
 backend/
+│
+├── calibration-recordings/
+│   └── Calibration Evidence Files
 │
 ├── server.js
 ├── vigilquad.sqlite
@@ -57,20 +80,35 @@ backend/
 
 The primary entry point of the application responsible for:
 
-- Initializing the Express server
-- Configuring middleware
-- Managing API routes
-- Handling monitoring requests
-- Coordinating backend operations
+* Initializing the Express server
+* Configuring middleware
+* Managing authentication routes
+* Managing examination routes
+* Handling calibration uploads
+* Processing analytics requests
+* Coordinating backend operations
 
 #### 📌 vigilquad.sqlite
 
 The local SQLite database used for:
 
-- Storing system information
-- Managing monitoring records
-- Logging surveillance events
-- Supporting application data persistence
+* Storing candidate accounts
+* Managing examination attempts
+* Persisting candidate scores
+* Storing warning statistics
+* Tracking examination telemetry
+* Supporting long-term data persistence
+
+#### 📌 calibration-recordings/
+
+Stores calibration evidence generated during the candidate onboarding process.
+
+Each recording is:
+
+* Candidate-linked
+* Timestamped
+* Stored locally
+* Available for future administrative review
 
 ---
 
@@ -82,8 +120,8 @@ Follow the instructions below to run the backend locally.
 
 Ensure the following software is installed:
 
-- Node.js (Latest LTS Recommended)
-- npm (Included with Node.js)
+* Node.js (Latest LTS Recommended)
+* npm (Included with Node.js)
 
 Verify installation:
 
@@ -138,12 +176,41 @@ http://localhost:5000
 
 The backend is responsible for:
 
-- Managing communication between services
-- Processing monitoring events
-- Handling surveillance data
-- Supporting frontend dashboard requests
-- Maintaining persistent storage
-- Coordinating AI-assisted functionalities
+* Candidate Authentication
+* JWT Validation
+* Examination Session Management
+* Calibration Recording Storage
+* Candidate Submission Processing
+* Warning Aggregation
+* Analytics Generation
+* Persistent Data Storage
+* Administrative Reporting
+* Communication with Frontend Services
+
+### Core API Groups
+
+#### Authentication APIs
+
+* Candidate Registration
+* Candidate Login
+* JWT Token Generation
+* Session Validation
+
+#### Examination APIs
+
+* Examination Submission
+* Telemetry Processing
+* Candidate Attempt Tracking
+
+#### Calibration APIs
+
+* Calibration Recording Upload
+* Calibration Evidence Management
+
+#### Administrative APIs
+
+* Examination Results Retrieval
+* Candidate Analytics Reporting
 
 ---
 
@@ -157,12 +224,26 @@ Database file:
 vigilquad.sqlite
 ```
 
+The database stores:
+
+* Candidate Accounts
+* Password Hashes
+* Examination Attempts
+* Final Scores
+* Right Answer Counts
+* Wrong Answer Counts
+* Answer Accuracy Metrics
+* Warning Statistics
+* Calibration Metrics
+* Submission Records
+
 Benefits include:
 
-- Zero configuration setup
-- Fast local development
-- Lightweight deployment
-- Reliable data persistence
+* Zero Configuration Setup
+* Fast Local Development
+* Lightweight Deployment
+* Reliable Data Persistence
+* Persistent Candidate Tracking
 
 ---
 
@@ -170,14 +251,23 @@ Benefits include:
 
 The backend is designed to support intelligent monitoring systems and computer vision workflows.
 
-Potential integrations include:
+Current integrations include:
 
-- Face Detection Services
-- Object Detection Pipelines
-- Event Classification
-- Real-Time Alert Systems
-- Behavioral Monitoring Modules
-- Security Analytics
+* Face Verification Support
+* Candidate Calibration Processing
+* Warning Aggregation
+* Examination Telemetry Processing
+
+Supported monitoring workflows include:
+
+* Face Detection Events
+* Face Absence Tracking
+* Unauthorized Face Detection
+* Environmental Audio Monitoring
+* Behavioral Calibration Analytics
+* Candidate Compliance Tracking
+
+Calibration evidence generated by the frontend can be uploaded and archived for future review.
 
 ---
 
@@ -185,14 +275,16 @@ Potential integrations include:
 
 Planned improvements include:
 
-- JWT Authentication & Authorization
-- Role-Based Access Control
-- WebSocket Support for Real-Time Updates
-- Cloud Database Integration
-- Advanced Event Logging
-- Notification Services
-- AI-Powered Threat Analysis
-- Multi-User Management
+* Role-Based Access Control
+* WebSocket Support for Real-Time Updates
+* Cloud Database Integration
+* Advanced Event Logging
+* Notification Services
+* AI-Powered Threat Analysis
+* Multi-User Administration
+* Cloud-Based Evidence Storage
+* Advanced Behavioral Analytics
+* Administrative Dashboard APIs
 
 ---
 
@@ -200,14 +292,23 @@ Planned improvements include:
 
 The backend architecture is designed with scalability and security in mind.
 
+Current security implementations include:
+
+* JWT Authentication
+* Password Hashing using bcrypt
+* Protected API Routes
+* Candidate Session Validation
+* One-Attempt Examination Enforcement
+* Persistent Examination Tracking
+
 Recommended production enhancements:
 
-- Environment Variables for Secrets
-- HTTPS Deployment
-- Rate Limiting
-- Input Validation
-- Authentication Middleware
-- Audit Logging
+* Environment Variables for Secrets
+* HTTPS Deployment
+* Rate Limiting
+* Advanced Input Validation
+* Audit Logging
+* Security Monitoring
 
 ---
 
@@ -248,5 +349,5 @@ This project is part of the VigilQuad ecosystem and is intended for educational,
 ---
 
 <p align="center">
-  Built with ❤️ using Node.js, Express, SQLite, and modern backend technologies.
+  Built with ❤️ using Node.js, Express, SQLite, Sequelize, JWT Authentication, Multer, and modern backend technologies.
 </p>

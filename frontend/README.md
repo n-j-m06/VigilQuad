@@ -1,41 +1,56 @@
 # 🛰️ VigilQuad Frontend
 
 <p align="center">
-  <strong>A modern React-powered surveillance dashboard for the VigilQuad ecosystem.</strong>
+  <strong>A modern React-powered surveillance and examination interface for the VigilQuad ecosystem.</strong>
 </p>
 
 ---
 
 ## 📖 Overview
 
-The VigilQuad Frontend serves as the primary user interface for the VigilQuad platform. Designed with responsiveness, performance, and usability in mind, it provides an intuitive dashboard for monitoring surveillance activities, visualizing detections, and interacting with AI-powered security features.
+The VigilQuad Frontend serves as the primary user interface for the VigilQuad platform. Designed with responsiveness, performance, and usability in mind, it provides an intuitive environment for candidate onboarding, facial verification, calibration, examination participation, and real-time monitoring workflows.
 
-Built using React and Vite, the application delivers a fast and seamless user experience while maintaining a scalable architecture suitable for future enhancements.
+Built using React and Vite, the application delivers a fast and seamless user experience while maintaining a scalable architecture suitable for future enhancements. The frontend communicates securely with the backend to facilitate authentication, examination management, calibration workflows, telemetry collection, and administrative monitoring.
 
 ---
 
 ## ✨ Features
 
-- 🎯 Modern and responsive user interface
-- ⚡ Fast development and build process with Vite
-- 👁️ Real-time surveillance visualization
-- 🤖 Integration with AI-powered detection systems
-- 📊 Interactive dashboard components
-- 🔄 Efficient state management using React Context API
-- 📱 Cross-device compatibility
-- 🛡️ Designed for smart security and monitoring applications
+* 🎯 Modern and responsive user interface
+* ⚡ Fast development and build process with Vite
+* 👁️ Real-time surveillance visualization
+* 🤖 Integration with AI-powered detection systems
+* 📊 Interactive dashboard components
+* 🔄 Efficient state management using React Context API
+* 📱 Cross-device compatibility
+* 🛡️ Designed for secure examination monitoring
+
+### Examination Features
+
+* 🔐 Candidate Login & Registration Workflow
+* 🎭 Face Verification Before Examination Access
+* 🎯 Three-Stage Quadrant Calibration System
+* ⏱️ Dynamic Quadrant Guidance Interface
+* 🎥 Automated Calibration Recording Support
+* 📝 Interactive Examination Environment
+* 🚨 Real-Time Warning Detection Integration
+* 📡 Backend Telemetry Communication
+* 🎓 Secure Examination Submission Workflow
+* 🔒 One-Attempt Examination Enforcement Support
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose |
-|------------|----------|
-| React | Frontend Framework |
-| Vite | Build Tool & Development Server |
-| JavaScript | Application Logic |
-| CSS | Styling & Layout |
-| React Context API | State Management |
+| Technology                | Purpose                         |
+| ------------------------- | ------------------------------- |
+| React                     | Frontend Framework              |
+| Vite                      | Build Tool & Development Server |
+| JavaScript                | Application Logic               |
+| CSS                       | Styling & Layout                |
+| React Context API         | State Management                |
+| MediaPipe Face Landmarker | Facial Landmark Detection       |
+| Web APIs                  | Camera & Media Handling         |
 
 ---
 
@@ -53,7 +68,10 @@ frontend/
 │   │   └── Images, Logos and Static Resources
 │   │
 │   ├── components/
-│   │   └── Reusable UI Components
+│   │   └── Authentication, Calibration, Monitoring and Exam Components
+│   │
+│   ├── context/
+│   │   └── Global Examination State Management
 │   │
 │   ├── App.jsx
 │   ├── main.jsx
@@ -74,8 +92,8 @@ Follow the steps below to set up and run the frontend locally.
 
 Ensure that the following software is installed on your system:
 
-- Node.js (Latest LTS Recommended)
-- npm (Comes bundled with Node.js)
+* Node.js (Latest LTS Recommended)
+* npm (Comes bundled with Node.js)
 
 Verify installation:
 
@@ -122,7 +140,7 @@ The application will be available at:
 http://localhost:5173
 ```
 
-Open the URL in your preferred browser to access the dashboard.
+Open the URL in your preferred browser to access the VigilQuad interface.
 
 ---
 
@@ -146,13 +164,22 @@ npm run preview
 
 The VigilQuad frontend is designed to provide:
 
-- Clean and intuitive navigation
-- Responsive layouts for different screen sizes
-- Efficient data presentation
-- Smooth user interactions
-- Real-time visual feedback
+* Clean and intuitive navigation
+* Responsive layouts for different screen sizes
+* Efficient data presentation
+* Smooth user interactions
+* Real-time visual feedback
 
-The dashboard architecture prioritizes usability while maintaining high performance for surveillance and monitoring workflows.
+The interface includes dedicated workflows for:
+
+* User Authentication
+* Face Verification
+* Calibration Guidance
+* Examination Participation
+* Monitoring Visualization
+* Session Management
+
+The dashboard architecture prioritizes usability while maintaining high performance for examination monitoring workflows.
 
 ---
 
@@ -162,11 +189,14 @@ The frontend is designed to work alongside AI-powered backend services and detec
 
 Supported functionalities include:
 
-- Face Detection
-- Object Detection
-- Real-Time Monitoring
-- Alert Visualization
-- Security Event Tracking
+* Face Detection
+* Facial Landmark Tracking
+* Head Orientation Monitoring
+* Real-Time Monitoring
+* Alert Visualization
+* Security Event Tracking
+* Calibration Sample Collection
+* Candidate Verification Workflows
 
 Model files can be found under:
 
@@ -174,18 +204,50 @@ Model files can be found under:
 public/models/
 ```
 
+### Candidate Verification & Calibration
+
+Before examination access is granted, candidates must successfully complete:
+
+#### Face Verification
+
+The system verifies candidate presence and identity before allowing progression into calibration and examination workflows.
+
+#### Quadrant Calibration
+
+The calibration workflow consists of:
+
+1. Top Right Quadrant
+2. Bottom Right Quadrant
+3. Bottom Left Quadrant
+
+Each quadrant is calibrated for approximately 15 seconds using MediaPipe facial landmark tracking.
+
+During calibration, the frontend:
+
+* Displays dynamic guidance prompts
+* Collects yaw and pitch measurements
+* Captures calibration samples
+* Records calibration evidence
+* Builds behavioral reference datasets
+
+Only after successful calibration is the examination interface unlocked.
+
 ---
 
 ## 📈 Future Enhancements
 
 Planned improvements include:
 
-- Real-time notifications
-- Enhanced analytics dashboard
-- Multi-camera support
-- Advanced visualization tools
-- User authentication and role management
-- Cloud deployment integration
+* Real-time notifications
+* Enhanced analytics dashboard
+* Multi-camera support
+* Advanced visualization tools
+* Administrative monitoring interface
+* Cloud-based evidence storage
+* Advanced behavioral analytics
+* Mobile monitoring support
+* Enhanced accessibility features
+* Cloud deployment integration
 
 ---
 
@@ -196,6 +258,7 @@ Contributions are welcome and appreciated.
 To contribute:
 
 1. Fork the repository
+
 2. Create a feature branch
 
 ```bash
@@ -225,5 +288,5 @@ This project is part of the VigilQuad ecosystem and is intended for educational,
 ---
 
 <p align="center">
-  Built with ❤️ using React, Vite, and modern web technologies.
+  Built with ❤️ using React, Vite, MediaPipe, React Context API, and modern web technologies.
 </p>

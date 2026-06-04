@@ -97,7 +97,27 @@ export const ExamProvider = ({ children }) => {
   const handleFinalSubmission = async () => {
     setExamEnded(true);
     const metrics = calculateLiveScore();
+    const topRightSamples =
+  quadrantCalibration.topRight.length;
 
+const bottomRightSamples =
+  quadrantCalibration.bottomRight.length;
+
+const bottomLeftSamples =
+  quadrantCalibration.bottomLeft.length;
+
+const totalSamples =
+  topRightSamples +
+  bottomRightSamples +
+  bottomLeftSamples;
+
+const expectedSamples = 450;
+
+const calibrationAccuracy =
+  Math.min(
+    100,
+    (totalSamples / expectedSamples) * 100
+  );
     try {
       await fetch('http://localhost:5000/api/exam/submit', {
         method: 'POST',
@@ -105,12 +125,25 @@ export const ExamProvider = ({ children }) => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          rightAnswers: metrics.right,
-          wrongAnswers: metrics.wrong,
-          warningsCount: warnings, // Sent full object
-          finalScore: metrics.finalScore
-        })
+       body: JSON.stringify({
+
+  rightAnswers: metrics.right,
+
+  wrongAnswers: metrics.wrong,
+
+  warningsCount: warnings,
+
+  finalScore: metrics.finalScore,
+
+  calibrationAccuracy,
+
+  topRightSamples,
+
+  bottomRightSamples,
+
+  bottomLeftSamples
+
+})
       });
     } catch (err) {
       console.error('Error submitting payload telemetry:', err);

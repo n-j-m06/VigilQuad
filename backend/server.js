@@ -3,6 +3,9 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { Sequelize, DataTypes } from 'sequelize';
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
 
 const app = express();
 app.use(cors());
@@ -38,15 +41,71 @@ const ExamSession = sequelize.define('ExamSession', {
     defaultValue: 0
   },
 
-  warningsCount: {
-    type: DataTypes.JSON,
-    defaultValue: {}
-  }
+ warningsCount: {
+  type: DataTypes.JSON,
+  defaultValue: {}
+},
+
+calibrationAccuracy: {
+  type: DataTypes.FLOAT,
+  defaultValue: 0
+},
+
+topRightSamples: {
+  type: DataTypes.INTEGER,
+  defaultValue: 0
+},
+
+bottomRightSamples: {
+  type: DataTypes.INTEGER,
+  defaultValue: 0
+},
+
+bottomLeftSamples: {
+  type: DataTypes.INTEGER,
+  defaultValue: 0
+}
 });
 
 sequelize.sync().then(() => console.log('🟢 SQLite Backend Ready.'));
+if (!fs.existsSync('./calibration-recordings')) {
+
+  fs.mkdirSync('./calibration-recordings');
+
+}
 
 const JWT_SECRET = 'VIGILQUAD_SUPER_SECRET_TOKEN';
+const storage = multer.diskStorage({
+
+  destination: (req, file, cb) => {
+
+    cb(
+      null,
+      './calibration-recordings'
+    );
+
+  },
+
+  filename: (req, file, cb) => {
+
+  const username =
+    req.user.username;
+
+  const timestamp =
+    Date.now();
+
+  cb(
+    null,
+    `${username}_${timestamp}.webm`
+  );
+
+}
+
+});
+
+const upload = multer({
+  storage
+});
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -126,18 +185,60 @@ app.post(
 
   }
 );
+app.post(
+  '/api/calibration/upload',
+  authenticateToken,
+  upload.single('video'),
+  async (req, res) => {
+
+    const username =
+      req.user.username;
+
+    const quadrant =
+      req.body.quadrant;
+
+    const timestamp =
+      Date.now();
+
+    const newName =
+      `${username}_${quadrant}_${timestamp}.webm`;
+
+    const oldPath =
+      req.file.path;
+
+    const newPath =
+      `./calibration-recordings/${newName}`;
+
+    fs.renameSync(
+      oldPath,
+      newPath
+    );
+
+    res.json({
+      success: true,
+      file: newName
+    });
+
+  }
+);
 app.post('/api/exam/submit', authenticateToken, async (req, res) => {
 
   try {
 
-    const {
+   const {
 
-      finalScore,
-      rightAnswers,
-      wrongAnswers,
-      warningsCount
+  finalScore,
+  rightAnswers,
+  wrongAnswers,
+  warningsCount,
 
-    } = req.body;
+  calibrationAccuracy,
+
+  topRightSamples,
+  bottomRightSamples,
+  bottomLeftSamples
+
+} = req.body;
 
     const totalQuestions =
       rightAnswers + wrongAnswers;
@@ -159,8 +260,12 @@ app.post('/api/exam/submit', authenticateToken, async (req, res) => {
 
       accuracy,
 
-      warningsCount
+      warningsCount,
+      calibrationAccuracy,
 
+      topRightSamples,
+      bottomRightSamples,
+      bottomLeftSamples,
     });
 
     res.status(201).json({
@@ -184,7 +289,35 @@ app.get('/api/admin/results', async (req, res) => {
 
     console.log(results);
 
-    res.json(results);
+    res.json(
+
+  results.map(item => ({
+
+    username: item.username,
+
+    finalScore: item.finalScore,
+
+    answerAccuracy:
+      item.accuracy.toFixed(2),
+
+    calibrationAccuracy:
+      item.calibrationAccuracy?.toFixed(2),
+
+    topRightSamples:
+      item.topRightSamples,
+
+    bottomRightSamples:
+      item.bottomRightSamples,
+
+    bottomLeftSamples:
+      item.bottomLeftSamples,
+
+    warnings:
+      item.warningsCount?.totalCount || 0
+
+  }))
+
+);
 
   } catch (err) {
 

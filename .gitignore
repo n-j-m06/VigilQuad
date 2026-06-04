@@ -1,8 +1,10 @@
 # Dependencies
+
 node_modules/
 **/node_modules/
 
 # Logs
+
 logs
 *.log
 npm-debug.log*
@@ -12,6 +14,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Environment files
+
 .env
 .env.local
 .env.development.local
@@ -19,18 +22,67 @@ lerna-debug.log*
 .env.production.local
 
 # Build outputs
+
 dist
 dist-ssr
 build
 out
 
+# Database
+
+*.sqlite
+*.sqlite3
+vigilquad.sqlite
+
+# Calibration recordings
+
+calibration-recordings/
+*.webm
+
+# Generated media
+
+*.mp4
+*.avi
+*.mov
+
+# Coverage
+
+coverage/
+
 # Editor directories and files
+
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
+Thumbs.db
+
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# OS files
+
+Desktop.ini
+
+# Temporary files
+
+tmp/
+temp/
+*.tmp
+
+# Cache
+
+.cache/
+.parcel-cache/
+
+# Vite
+
+.vite/
+
+# Misc
+
+*.bak
+*.old

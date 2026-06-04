@@ -23,23 +23,37 @@ const calibrationSequence = [
 export default function DemoCalibration({ triggerNotify }) {
 
   const {
-    setDemoCompleted,
 
-    quadrantCalibration,
-    setQuadrantCalibration,
+  username,
+  token,
 
-    setCalibrationAverages
+  setDemoCompleted,
 
-  } = useExam();
+  quadrantCalibration,
+  setQuadrantCalibration,
 
+  setCalibrationAverages
+
+} = useExam();
   const videoRef = useRef(null);
+  const mediaRecorderRef =
+  useRef(null);
+
+const recordedChunksRef =
+  useRef([]);
 
   const [currentStep, setCurrentStep] = useState(0);
+  const currentQuadrantRef = useRef('topRight');
   const [timer, setTimer] = useState(15);
 
   const currentQuadrant =
     calibrationSequence[currentStep];
+  useEffect(() => {
 
+  currentQuadrantRef.current =
+    currentQuadrant.key;
+
+}, [currentQuadrant]);
   // =========================
   // CAMERA INIT
   // =========================
@@ -62,6 +76,32 @@ export default function DemoCalibration({ triggerNotify }) {
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
+          const recorder =
+  new MediaRecorder(stream);
+
+mediaRecorderRef.current =
+  recorder;
+
+recordedChunksRef.current =
+  [];
+
+recorder.ondataavailable =
+  (event) => {
+
+    if (
+      event.data &&
+      event.data.size > 0
+    ) {
+
+      recordedChunksRef.current.push(
+        event.data
+      );
+
+    }
+
+  };
+
+recorder.start();
         }
 
         initializeTracking();
@@ -128,23 +168,124 @@ export default function DemoCalibration({ triggerNotify }) {
     }
 
   }, [timer]);
+  const uploadQuadrantRecording =
+  async (quadrantKey) => {
 
-  const moveNextStep = () => {
+    const blob =
+      new Blob(
+        recordedChunksRef.current,
+        {
+          type: 'video/webm'
+        }
+      );
 
-    if (
-      currentStep <
-      calibrationSequence.length - 1
-    ) {
+    const formData =
+      new FormData();
 
-      setCurrentStep(prev => prev + 1);
+    formData.append(
+      'video',
+      blob,
+      `${quadrantKey}.webm`
+    );
 
-      setTimer(15);
+    formData.append(
+      'quadrant',
+      quadrantKey
+    );
 
-    } else {
+    try {
 
-      finalizeCalibration();
+      await fetch(
+        'http://localhost:5000/api/calibration/upload',
+        {
+          method: 'POST',
+
+          headers: {
+            Authorization:
+              `Bearer ${token}`
+          },
+
+          body: formData
+        }
+      );
+
+    } catch (err) {
+
+      console.error(err);
+
     }
-  };
+
+};
+
+  const moveNextStep = async () => {
+
+  if (mediaRecorderRef.current) {
+
+    mediaRecorderRef.current.stop();
+
+    await new Promise(resolve => {
+
+      mediaRecorderRef.current.onstop =
+        async () => {
+
+          await uploadQuadrantRecording(
+            currentQuadrant.key
+          );
+
+          resolve();
+
+        };
+
+    });
+
+  }
+
+  if (
+    currentStep <
+    calibrationSequence.length - 1
+  ) {
+
+    recordedChunksRef.current = [];
+
+    const recorder =
+      new MediaRecorder(
+        videoRef.current.srcObject
+      );
+
+    mediaRecorderRef.current =
+      recorder;
+
+    recorder.ondataavailable =
+      (event) => {
+
+        if (
+          event.data &&
+          event.data.size > 0
+        ) {
+
+          recordedChunksRef.current.push(
+            event.data
+          );
+
+        }
+
+      };
+
+    recorder.start();
+
+    setCurrentStep(
+      prev => prev + 1
+    );
+
+    setTimer(15);
+
+  } else {
+
+    finalizeCalibration();
+
+  }
+
+};
 
   // =========================
   // FACELANDMARKER
@@ -226,7 +367,7 @@ const sample = {
 
   snapshot,
 
-  quadrant: currentQuadrant.key,
+ quadrant: currentQuadrantRef.current,
 
   timestamp: Date.now()
 };
@@ -239,13 +380,12 @@ const sample = {
 
             ...prev,
 
-            [currentQuadrant.key]: [
+            [currentQuadrantRef.current]: [
 
-              ...prev[currentQuadrant.key],
+  ...prev[currentQuadrantRef.current],
 
-              sample
-
-            ]
+  sample
+]
 
           }));
         }
@@ -307,9 +447,12 @@ const sample = {
         )
     };
 
-    setCalibrationAverages(averages);
+   
+setCalibrationAverages(
+  averages
+);
 
-    setDemoCompleted(true);
+setDemoCompleted(true);
   };
 
 return (
