@@ -26,10 +26,22 @@ const User = sequelize.define('User', {
 
 const ExamSession = sequelize.define('ExamSession', {
   username: { type: DataTypes.STRING, allowNull: false },
-  finalScore: { type: DataTypes.INTEGER, allowNull: false },
+
+  finalScore: { type: DataTypes.FLOAT, allowNull: false },
+
   rightAnswers: { type: DataTypes.INTEGER, defaultValue: 0 },
+
   wrongAnswers: { type: DataTypes.INTEGER, defaultValue: 0 },
-  warningsCount: { type: DataTypes.JSON, defaultValue: {} }
+
+  accuracy: {
+    type: DataTypes.FLOAT,
+    defaultValue: 0
+  },
+
+  warningsCount: {
+    type: DataTypes.JSON,
+    defaultValue: {}
+  }
 });
 
 sequelize.sync().then(() => console.log('🟢 SQLite Backend Ready.'));
@@ -115,10 +127,75 @@ app.post(
   }
 );
 app.post('/api/exam/submit', authenticateToken, async (req, res) => {
+
   try {
-    await ExamSession.create({ username: req.user.username, ...req.body });
-    res.status(201).json({ message: 'Telemetry recorded.' });
-  } catch (err) { res.status(500).json({ error: 'Failed to save.' }); }
+
+    const {
+
+      finalScore,
+      rightAnswers,
+      wrongAnswers,
+      warningsCount
+
+    } = req.body;
+
+    const totalQuestions =
+      rightAnswers + wrongAnswers;
+
+    const accuracy =
+      totalQuestions > 0
+        ? (rightAnswers / totalQuestions) * 100
+        : 0;
+
+    await ExamSession.create({
+
+      username: req.user.username,
+
+      finalScore,
+
+      rightAnswers,
+
+      wrongAnswers,
+
+      accuracy,
+
+      warningsCount
+
+    });
+
+    res.status(201).json({
+      message: 'Telemetry recorded.'
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: 'Failed to save.'
+    });
+
+  }
+
+});
+app.get('/api/admin/results', async (req, res) => {
+
+  try {
+
+    const results = await ExamSession.findAll();
+
+    console.log(results);
+
+    res.json(results);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+
 });
 
 app.listen(5000, () => console.log('🚀 Backend active on port 5000'));
