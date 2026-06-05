@@ -226,7 +226,7 @@ const {
 
 setQuestionsAttempted(newCount);
 
-if (newCount >= 90) {
+if (newCount >= 30) {
   setShowSubmitModal(true);
   return;
 }
@@ -311,7 +311,7 @@ if (currentPathIndex === 2) {
           marginBottom: '2rem'
         }}
       >
-        You have completed all 90 questions.
+       You have completed all 30 questions.
         <br />
         Do you want to submit your exam?
       </p>
