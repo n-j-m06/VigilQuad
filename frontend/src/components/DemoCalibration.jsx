@@ -446,6 +446,7 @@ const sample = {
           quadrantCalibration.bottomLeft
         )
     };
+  
 
    
 setCalibrationAverages(
