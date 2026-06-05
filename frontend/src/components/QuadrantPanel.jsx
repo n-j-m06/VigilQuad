@@ -231,9 +231,34 @@ if (newCount >= 90) {
   return;
 }
 
-setCurrentPathIndex((prevIndex) => (prevIndex + 1) % sequencePath.length);
-  };
+if (currentPathIndex === 2) {
 
+  let newPath;
+
+  do {
+
+    newPath = shuffleArray([
+      'physics',
+      'chemistry',
+      'biology'
+    ]);
+
+  } while (
+    JSON.stringify(newPath) ===
+    JSON.stringify(sequencePath)
+  );
+
+  setSequencePath(newPath);
+  setCurrentPathIndex(0);
+
+} else {
+
+  setCurrentPathIndex(
+    (prevIndex) => prevIndex + 1
+  );
+
+}
+};
   // Terminate test and redirect back to verification
  const processFinalSubmission = () => {
   handleFinalSubmission();
