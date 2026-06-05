@@ -5,6 +5,7 @@ import { QuadrantPanel } from './components/QuadrantPanel';
 import { MatrixBackground } from './components/MatrixBackground';
 import DemoCalibration from './components/DemoCalibration';
 import { Camera, ShieldCheck, UserCheck, Award } from 'lucide-react';
+import AdminDashboard from './components/AdminDashboard';
 
 function ControlHub() {
   const { 
@@ -84,7 +85,11 @@ function ControlHub() {
     setReferenceFace(canvas.toDataURL('image/jpeg'));
     setTimeout(() => { setIsFaceVerified(true); setVerifyingProgress(false); }, 2000);
   };
-
+  if (
+  window.location.pathname === '/admin'
+) {
+  return <AdminDashboard />;
+}
   return (
     <>
       {notify.text && (
