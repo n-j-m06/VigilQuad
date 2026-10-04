@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "engines": {
-  "node": "24.x"
-},
+    "node": "24.x"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "^1.0.1",
     "face-api.js": "^0.22.2",
     "lucide-react": "^1.16.0",
     "react": "^19.2.6",
