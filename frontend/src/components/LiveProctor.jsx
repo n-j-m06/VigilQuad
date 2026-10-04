@@ -7,9 +7,38 @@ const LiveProctor = ({ triggerNotify }) => {
   const {
     examStarted,
     calibrationAverages,
-    expectedQuadrant
+    expectedQuadrant,
+    referenceFace
   } = useExam();
+const examStartTime = useRef(Date.now());
 
+const getElapsedTime = () => {
+
+  const elapsed =
+    Math.floor(
+      (Date.now() -
+        examStartTime.current) / 1000
+    );
+
+  const hours =
+    Math.floor(elapsed / 3600);
+
+  const minutes =
+    Math.floor(
+      (elapsed % 3600) / 60
+    );
+
+  const seconds =
+    elapsed % 60;
+
+  return `${hours
+    .toString()
+    .padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}:${seconds
+    .toString()
+    .padStart(2, '0')}`;
+};
   const baselineSignatures = useRef([]);
   const yawHistory = useRef([]);
 const pitchHistory = useRef([]);
@@ -54,6 +83,7 @@ const lastFaceWarningTime = useRef(0);
       faceHeight
     ];
   };
+  
 
   // =========================
   // QUADRANT DETECTION
@@ -77,6 +107,7 @@ const lastFaceWarningTime = useRef(0);
   useEffect(() => {
 
     if (!examStarted) return;
+    examStartTime.current = Date.now();
 
     let faceLandmarker;
     let audioContext;
@@ -414,19 +445,10 @@ if (!withinGracePeriod) {
             // BASELINE BUILD
             // =========================
 
-            if (!isBaselineSet.current) {
-
-              baselineSignatures.current.push(
-                liveSig
-              );
-
-              if (
-                baselineSignatures.current.length >= 30
-              ) {
-
-                isBaselineSet.current = true;
-              }
-            }
+            if (!referenceFace) {
+  requestAnimationFrame(detect);
+  return;
+}
 
             // =========================
             // LIVE VALIDATION
@@ -434,19 +456,7 @@ if (!withinGracePeriod) {
 
             else {
 
-              const avgBaseline =
-                baselineSignatures.current.reduce(
-
-                  (acc, curr) => [
-
-                    acc[0] + curr[0] / 30,
-                    acc[1] + curr[1] / 30,
-                    acc[2] + curr[2] / 30
-
-                  ],
-
-                  [0, 0, 0]
-                );
+              const avgBaseline = referenceFace;
 
               const diff = Math.sqrt(
 
@@ -596,8 +606,7 @@ if (!withinGracePeriod) {
     };
 
   }, [
-    examStarted,
-    expectedQuadrant
+    examStarted
   ]);
 
   return null;

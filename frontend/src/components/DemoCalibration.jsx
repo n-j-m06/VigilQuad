@@ -32,8 +32,8 @@ export default function DemoCalibration({ triggerNotify }) {
   quadrantCalibration,
   setQuadrantCalibration,
 
-  setCalibrationAverages
-
+  setCalibrationAverages,
+  setReferenceFace
 } = useExam();
   const videoRef = useRef(null);
   const mediaRecorderRef =
@@ -196,7 +196,7 @@ recorder.start();
     try {
 
       await fetch(
-        'http://localhost:5000/api/calibration/upload',
+        '${import.meta.env.VITE_API_URL}/api/calibration/upload',
         {
           method: 'POST',
 
@@ -330,6 +330,29 @@ recorder.start();
 
           const landmarks =
             results.faceLandmarks[0];
+          const eyeDist =
+  Math.abs(
+    landmarks[33].x -
+    landmarks[263].x
+  );
+
+const noseToChin =
+  Math.abs(
+    landmarks[1].y -
+    landmarks[152].y
+  );
+
+const faceHeight =
+  Math.abs(
+    landmarks[10].y -
+    landmarks[152].y
+  );
+
+setReferenceFace([
+  eyeDist,
+  noseToChin,
+  faceHeight
+]);
 
           const nose = landmarks[1];
 

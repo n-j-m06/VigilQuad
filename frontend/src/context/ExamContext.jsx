@@ -14,12 +14,14 @@ export const ExamProvider = ({ children }) => {
 
   const [answers, setAnswers] = useState({});
   // Specific trackers for your 0.25 penalty logic
-  const [warnings, setWarnings] = useState({
-    unauthorizedFace: 0,
-    faceUndetected: 0,
-    unwantedSound: 0,
-    totalCount: 0,
-  });
+ const [warnings, setWarnings] = useState({
+  unauthorizedFace: 0,
+  faceUndetected: 0,
+  unwantedSound: 0,
+  totalCount: 0,
+
+  events: []
+});
   useEffect(() => {
   localStorage.removeItem('token');
   localStorage.removeItem('username');
@@ -63,14 +65,29 @@ export const ExamProvider = ({ children }) => {
   }, [examStarted, examEnded, globalTimeLeft]);
 
   // Updated triggerWarning: Now uses the 0.25 penalty requirement
-  const triggerWarning = (type) => {
-    setWarnings((prev) => ({
-      ...prev,
-      [type]: prev[type] + 1,
-      totalCount: prev.totalCount + 1,
-    }));
-  };
+  const triggerWarning = (
+  type,
+  warningData = null
+) => {
 
+  setWarnings((prev) => ({
+
+    ...prev,
+
+    [type]: prev[type] + 1,
+
+    totalCount:
+      prev.totalCount + 1,
+
+    events: warningData
+      ? [
+          ...prev.events,
+          warningData
+        ]
+      : prev.events
+
+  }));
+};
   const calculateLiveScore = () => {
     let right = 0;
     let wrong = 0;
@@ -80,18 +97,14 @@ export const ExamProvider = ({ children }) => {
       else wrong += 1;
     });
 
-    const marksFromAnswers = (right * 4) - (wrong * 1);
-    const penaltyFromWarnings = warnings.totalCount * 0.10;
-    
-    // REMOVED Math.max(0, ...) to allow negative scoring
-    const totalScore = marksFromAnswers - penaltyFromWarnings;
-    
-    return {
-      finalScore: totalScore, 
-      right,
-      wrong,
-      penalties: penaltyFromWarnings
-    };
+   const totalScore = right * 4;
+
+return {
+  finalScore: totalScore,
+  right,
+  wrong,
+  penalties: 0
+};
   };
 
   const handleFinalSubmission = async () => {
@@ -106,26 +119,14 @@ const bottomRightSamples =
 const bottomLeftSamples =
   quadrantCalibration.bottomLeft.length;
 
-const totalSamples =
-  topRightSamples +
-  bottomRightSamples +
-  bottomLeftSamples;
-
-const expectedSamples = 450;
-
-const calibrationAccuracy =
-  Math.min(
-    100,
-    (totalSamples / expectedSamples) * 100
-  );
     try {
-      await fetch('http://localhost:5000/api/exam/submit', {
+      await fetch('${import.meta.env.VITE_API_URL}/api/exam/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-       body: JSON.stringify({
+      body: JSON.stringify({
 
   rightAnswers: metrics.right,
 
@@ -134,8 +135,6 @@ const calibrationAccuracy =
   warningsCount: warnings,
 
   finalScore: metrics.finalScore,
-
-  calibrationAccuracy,
 
   topRightSamples,
 

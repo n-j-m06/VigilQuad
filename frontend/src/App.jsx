@@ -31,18 +31,50 @@ function ControlHub() {
   const [notify, setNotify] = useState({ text: '', type: '' });
 
   // Centralized Notification Trigger
-  const triggerNotify = (text, type) => {
-    setNotify({ text, type });
-    
-    // Map the string message to the warning type for the context tracker
-    let warningType = 'unauthorizedFace'; // Default
-    if (text.includes('No face')) warningType = 'faceUndetected';
-    if (text.includes('noise')) warningType = 'unwantedSound';
-    
-    triggerWarning(warningType);
-    
-    setTimeout(() => setNotify({ text: '', type: '' }), 4000);
-  };
+  const triggerNotify = (
+  text,
+  type
+) => {
+
+  setNotify({ text, type });
+
+  let warningType =
+    'unauthorizedFace';
+
+  if (
+    text.includes('No face')
+  )
+    warningType =
+      'faceUndetected';
+
+  if (
+    text.includes('noise')
+  )
+    warningType =
+      'unwantedSound';
+
+  triggerWarning(
+    warningType,
+    {
+      message: text,
+
+      timestamp:
+        new Date()
+          .toLocaleTimeString(),
+
+      warningType
+    }
+  );
+
+  setTimeout(
+    () =>
+      setNotify({
+        text: '',
+        type: ''
+      }),
+    4000
+  );
+};
 
   const onboardingVideoRef = useRef(null);
   const [onboardingStream, setOnboardingStream] = useState(null);
@@ -64,7 +96,7 @@ function ControlHub() {
     e.preventDefault();
     const endpoint = isLoginView ? 'login' : 'register';
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userForm)
@@ -157,7 +189,7 @@ function ControlHub() {
   try {
 
     await fetch(
-      'http://localhost:5000/api/exam/start',
+      '${import.meta.env.VITE_API_URL}/api/exam/start',
       {
         method: 'POST',
         headers: {

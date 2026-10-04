@@ -74,7 +74,7 @@ if (!fs.existsSync('./calibration-recordings')) {
 
 }
 
-const JWT_SECRET = 'VIGILQUAD_SUPER_SECRET_TOKEN';
+const JWT_SECRET = process.env.JWT_SECRET;
 const storage = multer.diskStorage({
 
   destination: (req, file, cb) => {
@@ -300,8 +300,6 @@ app.get('/api/admin/results', async (req, res) => {
     answerAccuracy:
       item.accuracy.toFixed(2),
 
-    calibrationAccuracy:
-      item.calibrationAccuracy?.toFixed(2),
 
     topRightSamples:
       item.topRightSamples,
@@ -313,7 +311,10 @@ app.get('/api/admin/results', async (req, res) => {
       item.bottomLeftSamples,
 
     warnings:
-      item.warningsCount?.totalCount || 0
+  item.warningsCount?.totalCount || 0,
+
+warningTimeline:
+  item.warningsCount?.events || []
 
   }))
 
@@ -331,4 +332,8 @@ app.get('/api/admin/results', async (req, res) => {
 
 });
 
-app.listen(5000, () => console.log('🚀 Backend active on port 5000'));
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Backend active on port ${PORT}`);
+});

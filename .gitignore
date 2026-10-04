@@ -86,3 +86,11 @@ temp/
 
 *.bak
 *.old
+
+node_modules/
+.env
+*.env
+vigilquad.sqlite
+backend/vigilquad.sqlite
+backend/calibration-recordings/
+dist/

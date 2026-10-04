@@ -6,7 +6,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
 
-    fetch('http://localhost:5000/api/admin/results')
+    fetch('${import.meta.env.VITE_API_URL}/api/admin/results')
       .then(res => res.json())
       .then(data => {
 
@@ -77,26 +77,36 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <table
-        style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          background: '#0f172a',
-          borderRadius: '16px',
-          overflow: 'hidden'
-        }}
-      >
+      <div
+  style={{
+    maxHeight: '500px',
+    overflowY: 'auto',
+    overflowX: 'auto',
+    borderRadius: '16px',
+    border: '1px solid #1e293b'
+  }}
+>
+
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    background: '#0f172a',
+    borderRadius: '16px',
+    overflow: 'hidden'
+  }}
+>
         <thead>
           <tr>
   <th style={th}>Rank</th>
   <th style={th}>Username</th>
   <th style={th}>Score</th>
   <th style={th}>Answer Accuracy</th>
-  <th style={th}>Calibration Accuracy</th>
   <th style={th}>Top Right Samples</th>
   <th style={th}>Bottom Right Samples</th>
   <th style={th}>Bottom Left Samples</th>
   <th style={th}>Warnings</th>
+  <th style={th}>Warning Timeline</th>
 </tr>
         </thead>
 
@@ -125,9 +135,6 @@ export default function AdminDashboard() {
   {item.answerAccuracy}%
 </td>
 
-<td style={td}>
-  {item.calibrationAccuracy}%
-</td>
 
 <td style={td}>
   {item.topRightSamples}
@@ -144,10 +151,32 @@ export default function AdminDashboard() {
 <td style={td}>
   {item.warnings}
 </td>
+<td
+  style={{
+    ...td,
+    maxWidth: '350px',
+    textAlign: 'left'
+  }}
+>
+  {
+    item.warningTimeline?.length
+      ? item.warningTimeline.map(
+          (event, idx) => (
+            <div key={idx}>
+              {event.timestamp}
+              {' - '}
+              {event.message}
+            </div>
+          )
+        )
+      : 'None'
+  }
+</td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
@@ -155,7 +184,10 @@ export default function AdminDashboard() {
 const th = {
   padding: '1rem',
   background: '#10b981',
-  color: '#020617'
+  color: '#020617',
+  position: 'sticky',
+  top: 0,
+  zIndex: 100
 };
 
 const td = {
