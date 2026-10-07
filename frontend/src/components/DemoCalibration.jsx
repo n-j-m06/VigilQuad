@@ -234,75 +234,39 @@ useEffect(() => {
 
 };
 
-  const moveNextStep = async () => {
+ const moveNextStep = async () => {
 
+  // Stop current recording
   if (mediaRecorderRef.current) {
-
     mediaRecorderRef.current.stop();
-
-    await new Promise(resolve => {
-
-      mediaRecorderRef.current.onstop =
-        async () => {
-
-          await uploadQuadrantRecording(
-            currentQuadrant.key
-          );
-
-          resolve();
-
-        };
-
-    });
-
   }
 
-  if (
-    currentStep <
-    calibrationSequence.length - 1
-  ) {
+  // Immediately move to the next quadrant
+  if (currentStep < calibrationSequence.length - 1) {
 
     recordedChunksRef.current = [];
 
     const recorder =
-      new MediaRecorder(
-        videoRef.current.srcObject
-      );
+      new MediaRecorder(videoRef.current.srcObject);
 
-    mediaRecorderRef.current =
-      recorder;
+    mediaRecorderRef.current = recorder;
 
-    recorder.ondataavailable =
-      (event) => {
-
-        if (
-          event.data &&
-          event.data.size > 0
-        ) {
-
-          recordedChunksRef.current.push(
-            event.data
-          );
-
-        }
-
-      };
+    recorder.ondataavailable = (event) => {
+      if (event.data && event.data.size > 0) {
+        recordedChunksRef.current.push(event.data);
+      }
+    };
 
     recorder.start();
 
-    setCurrentStep(
-      prev => prev + 1
-    );
-
+    setCurrentStep(prev => prev + 1);
 
   } else {
 
     finalizeCalibration();
 
   }
-
 };
-
   // =========================
   // FACELANDMARKER
   // =========================
