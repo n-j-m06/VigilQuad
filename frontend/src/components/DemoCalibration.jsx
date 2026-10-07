@@ -151,9 +151,9 @@ recorder.start();
 
     const interval = setInterval(() => {
 
-      setTimer(prev => prev - 1);
+  setTimer(prev => Math.max(prev - 1, 0));
 
-    }, 1000);
+}, 1000);
 
     return () => clearInterval(interval);
 
