@@ -213,7 +213,7 @@ useEffect(() => {
     try {
 
       await fetch(
-        '${import.meta.env.VITE_API_URL}/api/calibration/upload',
+  `${import.meta.env.VITE_API_URL}/api/calibration/upload`,
         {
           method: 'POST',
 
