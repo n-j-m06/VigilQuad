@@ -45,6 +45,7 @@ const recordedChunksRef =
   const [currentStep, setCurrentStep] = useState(0);
   const currentQuadrantRef = useRef('topRight');
   const [timer, setTimer] = useState(15);
+  const timerStartRef = useRef(Date.now());
 
   const currentQuadrant =
     calibrationSequence[currentStep];
@@ -147,27 +148,43 @@ recorder.start();
   // TIMER
   // =========================
 
-  useEffect(() => {
+// =========================
+// CALIBRATION TIMER
+// =========================
 
-    const interval = setInterval(() => {
+useEffect(() => {
 
-  setTimer(prev => Math.max(prev - 1, 0));
+  timerStartRef.current = Date.now();
 
-}, 1000);
+  setTimer(15);
 
-    return () => clearInterval(interval);
+  const interval = setInterval(() => {
 
-  }, [currentStep]);
+    const elapsed =
+      Math.floor(
+        (Date.now() - timerStartRef.current) / 1000
+      );
 
-  useEffect(() => {
+    const remaining =
+      Math.max(15 - elapsed, 0);
 
-    if (timer <= 0) {
+    setTimer(remaining);
+
+    if (remaining === 0) {
+
+      clearInterval(interval);
 
       moveNextStep();
 
     }
 
-  }, [timer]);
+  }, 250);
+
+  return () => {
+    clearInterval(interval);
+  };
+
+}, [currentStep]);
   const uploadQuadrantRecording =
   async (quadrantKey) => {
 
@@ -277,7 +294,6 @@ recorder.start();
       prev => prev + 1
     );
 
-    setTimer(15);
 
   } else {
 
